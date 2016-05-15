@@ -17,7 +17,7 @@ def show_item item
   soldoutpct = item['woot:soldoutpercentage'].to_f
   soldout = soldouttxt =~ /true/ ? 'Sold Out' : "#{(soldoutpct * 100).to_i}% sold"
 
-  puts '%-8s %-36.36s %7s - %8s - %3s comments' % [ "#{domain}:", item['title'], item['woot:price'], soldout, item['woot:comments'] ]
+  puts '%-12s %-32.32s %7s - %8s - %3s comments' % [ "#{domain}:", item['title'], item['woot:price'], soldout, item['woot:comments'] ]
 end
 
 def show_woot
