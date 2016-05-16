@@ -35,11 +35,11 @@ end
 
 def run
   options = OpenStruct.new
-  options.sleep = 15
+  options.sleep = nil
 
   opts = OptionParser.new { |opts|
-    opts.banner = "Usage: #{$0} [options]"
-    opts.on('--sleep N', Integer, 'Time between updates in seconds. (default: 15)') { |secs|
+    opts.banner = "Usage: #{$PROGRAM_NAME} [options]"
+    opts.on('-t', '--update-time N', Integer, 'Time between updates in seconds. This option is useful for watching a Woot-Off. If not specified, just run once and exit.') { |secs|
       options.sleep = secs
     }
     opts.on_tail('-h', '-?', '--help', 'Show this message') {
@@ -56,13 +56,17 @@ def run
     exit 1
   end
 
-  loop do
-    begin
-      show_woot
-    rescue => err
-      warn "Error getting Woot data: #{err}"
+  if options.sleep
+    loop do
+      begin
+        show_woot
+      rescue => err
+        warn "Error getting Woot data: #{err}"
+      end
+      sleep options.sleep
     end
-    sleep options.sleep
+  else
+    show_woot
   end
 rescue Interrupt
   warn "Interrupted! Exiting..."
