@@ -40,6 +40,11 @@ def run
   opts = OptionParser.new { |opts|
     opts.banner = "Usage: #{$PROGRAM_NAME} [options]"
     opts.on('-t', '--update-time N', Integer, 'Time between updates in seconds. This option is useful for watching a Woot-Off. If not specified, just run once and exit.') { |secs|
+      if secs <= 0
+        warn 'Error parsing command line: -t argument must be greater than 0.'
+        warn opts
+        exit 1
+      end
       options.sleep = secs
     }
     opts.on_tail('-h', '-?', '--help', 'Show this message') {
