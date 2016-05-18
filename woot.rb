@@ -34,23 +34,24 @@ def show_woot
 end
 
 def run
-  options = OpenStruct.new
-  options.sleep = nil
+  options = OpenStruct.new sleep: nil
 
-  opts = OptionParser.new { |opts|
-    opts.banner = "Usage: #{$PROGRAM_NAME} [options]"
-    opts.on('-t', '--update-time N', Integer, 'Time between updates in seconds. This option is useful for watching a Woot-Off. If not specified, just run once and exit.') { |secs|
-      if secs <= 0
-        warn 'Error parsing command line: -t argument must be greater than 0.'
-        warn opts
-        exit 1
-      end
-      options.sleep = secs
-    }
-    opts.on_tail('-h', '-?', '--help', 'Show this message') {
-      puts opts
-      exit
-    }
+  opts = OptionParser.new
+
+  opts.banner = "Usage: #{$PROGRAM_NAME} [options]"
+
+  opts.on('-t', '--update-time N', Integer, 'Time between updates in seconds. This option is useful for watching a Woot-Off. If not specified, just run once and exit.') { |secs|
+    if secs <= 0
+      warn 'Error parsing command line: -t argument must be greater than 0.'
+      warn opts
+      exit 1
+    end
+    options.sleep = secs
+  }
+
+  opts.on('-h', '-?', '--help', 'Show this message') {
+    puts opts
+    exit
   }
 
   begin
