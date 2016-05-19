@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# Woot-off watcher.
+# Woot-off watcher and Woot daily deals summary.
 
 require 'open-uri'
 require 'rexml/document'
@@ -8,26 +8,26 @@ require 'time'
 require 'optparse'
 require 'ostruct'
 
-$WOOT_URL = 'http://api.woot.com/1/sales/current.rss'
+WOOT_URL = 'http://api.woot.com/1/sales/current.rss'.freeze
 
 def show_item item
-  domain = (item['link'].to_s =~ /^http:\/\/(?:www\.)?([^\/\.]+)/ ? $1 : '')
+  domain = item['link'].to_s =~ %r{^http://(?:www\.)?([^/\.]+)} ? Regexp.last_match(1) : ''
 
   soldouttxt = item['woot:soldout']
   soldoutpct = item['woot:soldoutpercentage'].to_f
   soldout = soldouttxt =~ /true/ ? 'Sold Out' : "#{(soldoutpct * 100).to_i}% sold"
 
-  puts '%-12s %-32.32s %7s - %8s - %3s comments' % [ "#{domain}:", item['title'], item['woot:price'], soldout, item['woot:comments'] ]
+  puts format('%-12s %-32.32s %7s - %8s - %3s comments', "#{domain}:", item['title'], item['woot:price'], soldout, item['woot:comments'])
 end
 
 def show_woot
-  open($WOOT_URL) { |io|
+  open(WOOT_URL) { |io|
     doc = REXML::Document.new io
     puts Time.now.strftime '%H:%M:%S'
     doc.elements.collect('rss/channel/item') { |item|
-      itemhash = Hash[ item.elements.collect { |elem|
-        [ elem.expanded_name, elem.text ]
-      } ]
+      itemhash = Hash[item.elements.collect { |elem|
+        [elem.expanded_name, elem.text]
+      }]
       show_item itemhash
     }
   }
@@ -75,9 +75,9 @@ def run
     show_woot
   end
 rescue Interrupt
-  warn "Interrupted! Exiting..."
+  warn 'Interrupted! Exiting...'
 end
 
 run
 
-# -- The End --
+__END__
