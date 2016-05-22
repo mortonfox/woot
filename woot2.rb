@@ -6,7 +6,7 @@ require 'time'
 require 'optparse'
 require 'ostruct'
 
-WOOT_URL = 'http://api.woot.com/2/events.json?key=95c1faa8df564b7cb65b681c8b07148d&eventType=Daily'
+WOOT_URL = 'http://api.woot.com/2/events.json?key=95c1faa8df564b7cb65b681c8b07148d&eventType=Daily'.freeze
 
 def show_woot
   open(WOOT_URL) { |io|
