@@ -11,26 +11,29 @@ require 'ostruct'
 WOOT_URL = 'http://api.woot.com/1/sales/current.rss'.freeze
 
 def show_item item
-  domain = item['link'].to_s =~ %r{^http://(?:www\.)?([^/\.]+)} ? Regexp.last_match(1) : ''
-
   soldouttxt = item['woot:soldout']
   soldoutpct = item['woot:soldoutpercentage'].to_f
   soldout = soldouttxt =~ /true/ ? 'Sold Out' : "#{(soldoutpct * 100).to_i}% sold"
 
-  puts format('%-12s %-32.32s %7s - %8s - %3s comments', "#{domain}:", item['title'], item['woot:price'], soldout, item['woot:comments'])
+  puts format('%-12s %-32.32s %7s - %8s - %3s comments', "#{item['domain']}:", item['title'], item['woot:price'], soldout, item['woot:comments'])
 end
 
 def show_woot
+  itemhashes = nil
   open(WOOT_URL) { |io|
-    doc = REXML::Document.new io
+    result = io.read.gsub('&#x10;', '') # Remove bad XML.
+    doc = REXML::Document.new result
     puts Time.now.strftime '%H:%M:%S'
-    doc.elements.collect('rss/channel/item') { |item|
-      itemhash = Hash[item.elements.collect { |elem|
+    itemhashes = doc.elements.collect('rss/channel/item') { |item|
+      item = Hash[item.elements.collect { |elem|
         [elem.expanded_name, elem.text]
       }]
-      show_item itemhash
+      item['domain'] = item['link'].to_s =~ %r{^http://(?:www\.)?([^/\.]+)} ? Regexp.last_match(1) : ''
+      item
     }
   }
+  itemhashes.sort_by { |item| item['domain'] }
+    .each { |item| show_item item }
 end
 
 def run
