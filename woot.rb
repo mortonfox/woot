@@ -23,7 +23,6 @@ def show_woot
   open(WOOT_URL) { |io|
     result = io.read.gsub('&#x10;', '') # Remove bad XML.
     doc = REXML::Document.new result
-    puts Time.now.strftime '%H:%M:%S'
     itemhashes = doc.elements.collect('rss/channel/item') { |item|
       item = Hash[item.elements.collect { |elem|
         [elem.expanded_name, elem.text]
@@ -68,6 +67,7 @@ def run
   if options.sleep
     loop do
       begin
+        puts Time.now.strftime '%H:%M:%S'
         show_woot
       rescue => err
         warn "Error getting Woot data: #{err}"
