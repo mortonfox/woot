@@ -29,18 +29,19 @@ def show_woot domain, offer
   puts format('%-11s %-46.46s %8s - %8s', domain, offer['Title'], price, soldout)
 end
 
-def show_woots
-  woot_list = offers WOOT_URL
+def show_woot_list woot_list
   woot_list.keys.sort.each { |domain|
     show_woot domain, woot_list[domain]
   }
+end
+
+def show_woots
+  show_woot_list(offers(WOOT_URL))
 
   wootoff_list = offers WOOTOFF_URL
   unless wootoff_list.empty?
     puts "\n=== Woot-Off! ==="
-    wootoff_list.keys.sort.each { |domain|
-      show_woot domain, wootoff_list[domain]
-    }
+    show_woot_list wootoff_list
   end
 end
 
