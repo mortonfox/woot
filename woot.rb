@@ -35,7 +35,7 @@ def show_woot
     .each { |item| show_item item }
 end
 
-def run
+def parse_cmdline
   options = OpenStruct.new sleep: nil
 
   opts = OptionParser.new
@@ -63,6 +63,12 @@ def run
     warn opts
     exit 1
   end
+
+  options
+end
+
+def run
+  options = parse_cmdline
 
   if options.sleep
     loop do
