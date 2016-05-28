@@ -82,8 +82,12 @@ options = parse_cmdline
 if options.sleep
   begin
     loop do
-      puts Time.now.strftime '%H:%M:%S'
-      show_woots
+      begin
+        puts Time.now.strftime '%H:%M:%S'
+        show_woots
+      rescue => err
+        warn "Error getting Woot data: #{err}"
+      end
       sleep options.sleep
     end
   rescue Interrupt
