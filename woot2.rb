@@ -77,10 +77,10 @@ def parse_cmdline
   options
 end
 
-options = parse_cmdline
+def run
+  options = parse_cmdline
 
-if options.sleep
-  begin
+  if options.sleep
     loop do
       begin
         puts Time.now.strftime '%H:%M:%S'
@@ -90,11 +90,13 @@ if options.sleep
       end
       sleep options.sleep
     end
-  rescue Interrupt
-    puts 'Interrupted! Exiting...'
+  else
+    show_woots
   end
-else
-  show_woots
+rescue Interrupt
+  puts 'Interrupted! Exiting...'
 end
+
+run
 
 __END__
