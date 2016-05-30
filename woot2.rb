@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+#
+# Woot-off watcher and Woot daily deals summary.
+# Uses Woot API v2 beta.
 
 require 'open-uri'
 require 'json'
