@@ -31,7 +31,8 @@ def show_woot
       item
     }
   }
-  itemhashes.sort_by { |item| item['domain'] }
+  itemhashes
+    .sort_by { |item| item['domain'] }
     .each { |item| show_item item }
 end
 
