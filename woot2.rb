@@ -9,8 +9,11 @@ require 'time'
 require 'optparse'
 require 'ostruct'
 
-WOOT_URL = 'http://api.woot.com/2/events.json?key=95c1faa8df564b7cb65b681c8b07148d&eventType=Daily'.freeze
-WOOTOFF_URL = 'http://api.woot.com/2/events.json?key=95c1faa8df564b7cb65b681c8b07148d&eventType=WootOff'.freeze
+API_KEY = '95c1faa8df564b7cb65b681c8b07148d'.freeze
+
+def woot_url event_type
+  "http://api.woot.com/2/events.json?key=#{API_KEY}&eventType=#{event_type}"
+end
 
 def offers url
   open(url) { |io|
@@ -39,9 +42,9 @@ def show_woot_list woot_list
 end
 
 def show_woots
-  show_woot_list(offers(WOOT_URL))
+  show_woot_list(offers(woot_url('Daily')))
 
-  wootoff_list = offers WOOTOFF_URL
+  wootoff_list = offers(woot_url('WootOff'))
   unless wootoff_list.empty?
     puts "\n=== Woot-Off! ==="
     show_woot_list wootoff_list
