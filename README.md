@@ -37,3 +37,13 @@ or
 This command will display the set of deals every 15 seconds until you hit
 Ctrl-C to terminate it. Instead of 15, you can specify any other number N to
 repeat the display every N seconds.
+
+## Woot v2 API key
+
+Woot API v2 takes an API key parameter on each request. A default API key is
+included with the script. However, if you need your own API key, register a new
+application at <https://account.woot.com/applications>.
+
+After you have registered the application, Woot will provide two strings.
+Ignore the API secret for now. Copy the API key into the line of the script
+that sets the API\_KEY.
